@@ -11,10 +11,6 @@ import type {
 } from "@/types";
 
 function getApiBaseUrl(): string {
-  if (typeof window !== 'undefined') {
-    return '/api/proxy';
-  }
-  
   let baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
   
   if (!baseUrl) {
