@@ -349,25 +349,25 @@ export default function StockDetailPage() {
           <CardContent>
             {latestIndicators ? (
               <div className="grid grid-cols-2 gap-4">
-                {latestIndicators.rsi !== undefined && (
+                {latestIndicators.rsi !== undefined && latestIndicators.rsi !== null && typeof latestIndicators.rsi === 'number' && (
                   <div className="p-3 bg-muted/50 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">RSI</div>
                     <div className="text-2xl font-semibold">{latestIndicators.rsi.toFixed(2)}</div>
                   </div>
                 )}
-                {latestIndicators.macd !== undefined && (
+                {latestIndicators.macd !== undefined && latestIndicators.macd !== null && typeof latestIndicators.macd === 'number' && (
                   <div className="p-3 bg-muted/50 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">MACD</div>
                     <div className="text-2xl font-semibold">{latestIndicators.macd.toFixed(2)}</div>
                   </div>
                 )}
-                {latestIndicators.sma_20 !== undefined && (
+                {latestIndicators.sma_20 !== undefined && latestIndicators.sma_20 !== null && typeof latestIndicators.sma_20 === 'number' && (
                   <div className="p-3 bg-muted/50 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">SMA 20</div>
                     <div className="text-2xl font-semibold">{latestIndicators.sma_20.toFixed(2)}</div>
                   </div>
                 )}
-                {latestIndicators.sma_50 !== undefined && (
+                {latestIndicators.sma_50 !== undefined && latestIndicators.sma_50 !== null && typeof latestIndicators.sma_50 === 'number' && (
                   <div className="p-3 bg-muted/50 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">SMA 50</div>
                     <div className="text-2xl font-semibold">{latestIndicators.sma_50.toFixed(2)}</div>
@@ -395,19 +395,19 @@ export default function StockDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
-                {fundamentals.pe_ratio !== undefined && (
+                {fundamentals.pe_ratio !== undefined && fundamentals.pe_ratio !== null && typeof fundamentals.pe_ratio === 'number' && (
                   <div className="p-3 bg-muted/50 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">P/E Ratio</div>
                     <div className="text-2xl font-semibold">{fundamentals.pe_ratio.toFixed(2)}</div>
                   </div>
                 )}
-                {fundamentals.eps !== undefined && (
+                {fundamentals.eps !== undefined && fundamentals.eps !== null && typeof fundamentals.eps === 'number' && (
                   <div className="p-3 bg-muted/50 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">EPS</div>
                     <div className="text-2xl font-semibold">{fundamentals.eps.toFixed(2)}</div>
                   </div>
                 )}
-                {fundamentals.earnings_growth !== undefined && (
+                {fundamentals.earnings_growth !== undefined && fundamentals.earnings_growth !== null && typeof fundamentals.earnings_growth === 'number' && (
                   <div className="p-3 bg-muted/50 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">Earnings Growth</div>
                     <div className={`text-2xl font-semibold ${
@@ -417,7 +417,7 @@ export default function StockDetailPage() {
                     </div>
                   </div>
                 )}
-                {fundamentals.revenue !== undefined && (
+                {fundamentals.revenue !== undefined && fundamentals.revenue !== null && typeof fundamentals.revenue === 'number' && (
                   <div className="p-3 bg-muted/50 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">Revenue</div>
                     <div className="text-2xl font-semibold">
@@ -426,34 +426,36 @@ export default function StockDetailPage() {
                   </div>
                 )}
               </div>
-              {(fundamentals.dividend_yield !== undefined || fundamentals.dividend_per_share !== undefined || fundamentals.dividend_payout_ratio !== undefined) && (
+              {(fundamentals.dividend_yield !== undefined && fundamentals.dividend_yield !== null ||
+                fundamentals.dividend_per_share !== undefined && fundamentals.dividend_per_share !== null ||
+                fundamentals.dividend_payout_ratio !== undefined && fundamentals.dividend_payout_ratio !== null) && (
                 <div className="mt-6 pt-6 border-t">
                   <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                     <DollarSign className="h-5 w-5 text-primary" />
                     Dividend Information
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
-                    {fundamentals.dividend_yield !== undefined && (
+                    {fundamentals.dividend_yield !== undefined && fundamentals.dividend_yield !== null && (
                       <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
                         <div className="text-sm text-muted-foreground mb-1">Dividend Yield</div>
                         <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
-                          {fundamentals.dividend_yield.toFixed(2)}%
+                          {typeof fundamentals.dividend_yield === 'number' ? fundamentals.dividend_yield.toFixed(2) : fundamentals.dividend_yield}%
                         </div>
                       </div>
                     )}
-                    {fundamentals.dividend_per_share !== undefined && (
+                    {fundamentals.dividend_per_share !== undefined && fundamentals.dividend_per_share !== null && (
                       <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
                         <div className="text-sm text-muted-foreground mb-1">Dividend per Share</div>
                         <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
-                          {stock.currency} {fundamentals.dividend_per_share.toFixed(2)}
+                          {stock.currency} {typeof fundamentals.dividend_per_share === 'number' ? fundamentals.dividend_per_share.toFixed(2) : fundamentals.dividend_per_share}
                         </div>
                       </div>
                     )}
-                    {fundamentals.dividend_payout_ratio !== undefined && (
+                    {fundamentals.dividend_payout_ratio !== undefined && fundamentals.dividend_payout_ratio !== null && (
                       <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
                         <div className="text-sm text-muted-foreground mb-1">Payout Ratio</div>
                         <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
-                          {fundamentals.dividend_payout_ratio.toFixed(2)}%
+                          {typeof fundamentals.dividend_payout_ratio === 'number' ? fundamentals.dividend_payout_ratio.toFixed(2) : fundamentals.dividend_payout_ratio}%
                         </div>
                       </div>
                     )}
@@ -475,31 +477,39 @@ export default function StockDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <div className="text-sm text-muted-foreground mb-1">Total Return</div>
-                  <div
-                    className={`text-2xl font-semibold ${
-                      backtest.total_return >= 0 ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {backtest.total_return >= 0 ? "+" : ""}
-                    {backtest.total_return.toFixed(2)}%
+                {typeof backtest.total_return === 'number' && (
+                  <div className="p-3 bg-muted/50 rounded-lg">
+                    <div className="text-sm text-muted-foreground mb-1">Total Return</div>
+                    <div
+                      className={`text-2xl font-semibold ${
+                        backtest.total_return >= 0 ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {backtest.total_return >= 0 ? "+" : ""}
+                      {backtest.total_return.toFixed(2)}%
+                    </div>
                   </div>
-                </div>
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <div className="text-sm text-muted-foreground mb-1">Win Rate</div>
-                  <div className="text-2xl font-semibold">{(backtest.win_rate * 100).toFixed(1)}%</div>
-                </div>
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <div className="text-sm text-muted-foreground mb-1">Max Drawdown</div>
-                  <div className="text-2xl font-semibold text-red-600">
-                    {backtest.max_drawdown.toFixed(2)}%
+                )}
+                {typeof backtest.win_rate === 'number' && (
+                  <div className="p-3 bg-muted/50 rounded-lg">
+                    <div className="text-sm text-muted-foreground mb-1">Win Rate</div>
+                    <div className="text-2xl font-semibold">{(backtest.win_rate * 100).toFixed(1)}%</div>
                   </div>
-                </div>
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  <div className="text-sm text-muted-foreground mb-1">Sharpe Ratio</div>
-                  <div className="text-2xl font-semibold">{backtest.sharpe_ratio.toFixed(2)}</div>
-                </div>
+                )}
+                {typeof backtest.max_drawdown === 'number' && (
+                  <div className="p-3 bg-muted/50 rounded-lg">
+                    <div className="text-sm text-muted-foreground mb-1">Max Drawdown</div>
+                    <div className="text-2xl font-semibold text-red-600">
+                      {backtest.max_drawdown.toFixed(2)}%
+                    </div>
+                  </div>
+                )}
+                {typeof backtest.sharpe_ratio === 'number' && (
+                  <div className="p-3 bg-muted/50 rounded-lg">
+                    <div className="text-sm text-muted-foreground mb-1">Sharpe Ratio</div>
+                    <div className="text-2xl font-semibold">{backtest.sharpe_ratio.toFixed(2)}</div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
