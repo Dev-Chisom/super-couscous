@@ -10,7 +10,15 @@ import type {
   Market,
 } from "@/types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+let API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+if (API_BASE_URL && !API_BASE_URL.startsWith('http://') && !API_BASE_URL.startsWith('https://')) {
+  API_BASE_URL = `https://${API_BASE_URL}`;
+}
+
+if (API_BASE_URL.endsWith('/api/v1')) {
+  API_BASE_URL = API_BASE_URL.replace('/api/v1', '');
+}
 
 export class ApiClientError extends Error {
   constructor(
@@ -28,11 +36,7 @@ async function fetchApi<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
-  let baseUrl = API_BASE_URL;
-  if (baseUrl.endsWith('/api/v1')) {
-    baseUrl = baseUrl.replace('/api/v1', '');
-  }
-  const url = `${baseUrl}/api/v1${endpoint}`;
+  const url = `${API_BASE_URL}/api/v1${endpoint}`;
   
   try {
     const response = await fetch(url, {
