@@ -8,11 +8,14 @@ export type HoldingPeriod = "SHORT" | "MEDIUM" | "LONG";
 
 export type StockType = "GROWTH" | "DIVIDEND" | "HYBRID";
 
+export type AssetType = "STOCK" | "ETF" | "MUTUAL_FUND";
+
 export interface Stock {
   id: string;
   symbol: string;
   name: string;
   market: Market;
+  asset_type?: AssetType;
   sector?: string;
   stock_type?: StockType | null;
   currency: string;

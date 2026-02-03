@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignalBadge } from "@/components/signal-badge";
 import { StockTypeBadge } from "@/components/stock-type-badge";
+import { AssetTypeBadge } from "@/components/asset-type-badge";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { EmptyState } from "@/components/empty-state";
@@ -13,16 +14,17 @@ import { Badge } from "@/components/ui/badge";
 import { Globe, ArrowRight, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import type { Market, StockType } from "@/types";
+import type { Market, StockType, AssetType } from "@/types";
 
 export default function MarketPage() {
   const params = useParams();
   const market = (params.market as string).toUpperCase() as Market;
   const [stockTypeFilter, setStockTypeFilter] = useState<StockType | "ALL">("ALL");
+  const [assetTypeFilter, setAssetTypeFilter] = useState<AssetType | "ALL">("ALL");
 
   const { data: stocks, isLoading } = useQuery({
-    queryKey: ["market-stocks", market],
-    queryFn: () => api.markets.getStocks(market),
+    queryKey: ["market-stocks", market, assetTypeFilter],
+    queryFn: () => api.markets.getStocks(market, assetTypeFilter !== "ALL" ? { asset_type: assetTypeFilter } : undefined),
     enabled: market === "US" || market === "NGX",
   });
 
@@ -37,7 +39,11 @@ export default function MarketPage() {
   );
 
   const filteredStocks = Array.isArray(stocks) 
-    ? stocks.filter(stock => stockTypeFilter === "ALL" || stock.stock_type === stockTypeFilter)
+    ? stocks.filter(stock => {
+        const matchesAssetType = assetTypeFilter === "ALL" || stock.asset_type === assetTypeFilter || (!stock.asset_type && assetTypeFilter === "STOCK");
+        const matchesStockType = stockTypeFilter === "ALL" || stock.stock_type === stockTypeFilter;
+        return matchesAssetType && matchesStockType;
+      })
     : [];
 
   if (isLoading) {
@@ -69,36 +75,69 @@ export default function MarketPage() {
         </div>
       </div>
 
-      <div className="mb-6 flex items-center gap-2 flex-wrap">
-        <span className="text-sm text-muted-foreground">Filter by type:</span>
-        <Button
-          variant={stockTypeFilter === "ALL" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setStockTypeFilter("ALL")}
-        >
-          All Stocks
-        </Button>
-        <Button
-          variant={stockTypeFilter === "GROWTH" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setStockTypeFilter("GROWTH")}
-        >
-          Growth
-        </Button>
-        <Button
-          variant={stockTypeFilter === "DIVIDEND" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setStockTypeFilter("DIVIDEND")}
-        >
-          Dividend
-        </Button>
-        <Button
-          variant={stockTypeFilter === "HYBRID" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setStockTypeFilter("HYBRID")}
-        >
-          Hybrid
-        </Button>
+      <div className="mb-6 space-y-4">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-muted-foreground">Asset Type:</span>
+          <Button
+            variant={assetTypeFilter === "ALL" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setAssetTypeFilter("ALL")}
+          >
+            All Assets
+          </Button>
+          <Button
+            variant={assetTypeFilter === "STOCK" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setAssetTypeFilter("STOCK")}
+          >
+            Stocks
+          </Button>
+          <Button
+            variant={assetTypeFilter === "ETF" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setAssetTypeFilter("ETF")}
+          >
+            ETFs
+          </Button>
+          <Button
+            variant={assetTypeFilter === "MUTUAL_FUND" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setAssetTypeFilter("MUTUAL_FUND")}
+          >
+            Mutual Funds
+          </Button>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-muted-foreground">Stock Type:</span>
+          <Button
+            variant={stockTypeFilter === "ALL" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStockTypeFilter("ALL")}
+          >
+            All
+          </Button>
+          <Button
+            variant={stockTypeFilter === "GROWTH" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStockTypeFilter("GROWTH")}
+          >
+            Growth
+          </Button>
+          <Button
+            variant={stockTypeFilter === "DIVIDEND" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStockTypeFilter("DIVIDEND")}
+          >
+            Dividend
+          </Button>
+          <Button
+            variant={stockTypeFilter === "HYBRID" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStockTypeFilter("HYBRID")}
+          >
+            Hybrid
+          </Button>
+        </div>
       </div>
 
       {filteredStocks.length > 0 ? (
@@ -110,9 +149,14 @@ export default function MarketPage() {
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="text-xl mb-1 group-hover:text-primary transition-colors">
-                        {stock.symbol}
-                      </CardTitle>
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                          {stock.symbol}
+                        </CardTitle>
+                        {stock.asset_type && stock.asset_type !== "STOCK" && (
+                          <AssetTypeBadge assetType={stock.asset_type} showIcon={false} className="text-xs" />
+                        )}
+                      </div>
                       <p className="text-sm text-muted-foreground line-clamp-2">
                         {stock.name}
                       </p>

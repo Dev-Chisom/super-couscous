@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SignalBadge } from "@/components/signal-badge";
 import { StockChart } from "@/components/stock-chart";
 import { StockTypeBadge } from "@/components/stock-type-badge";
+import { AssetTypeBadge } from "@/components/asset-type-badge";
 import { EntryTimingBadge } from "@/components/entry-timing-badge";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -104,6 +105,9 @@ export default function StockDetailPage() {
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               <Badge variant="outline" className="text-sm px-3 py-1">{stock.market}</Badge>
+              {stock.asset_type && stock.asset_type !== "STOCK" && (
+                <AssetTypeBadge assetType={stock.asset_type} />
+              )}
               {stock.sector && (
                 <Badge variant="secondary" className="text-sm px-3 py-1">{stock.sector}</Badge>
               )}

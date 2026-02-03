@@ -113,7 +113,7 @@ function buildQueryString(params?: Record<string, any>): string {
 
 export const api = {
   stocks: {
-    list: async (params?: { market?: Market; sector?: string; stock_type?: string; page?: number; limit?: number }) => {
+    list: async (params?: { market?: Market; sector?: string; stock_type?: string; asset_type?: string; page?: number; limit?: number }) => {
       const query = buildQueryString(params);
       return fetchApi<Stock[]>(`/stocks${query}`);
     },
@@ -153,8 +153,9 @@ export const api = {
   },
 
   markets: {
-    getStocks: async (market: Market) => {
-      const data = await fetchApi<Stock[] | { items: Stock[] }>(`/markets/${market}/stocks`);
+    getStocks: async (market: Market, params?: { asset_type?: string }) => {
+      const query = buildQueryString(params);
+      const data = await fetchApi<Stock[] | { items: Stock[] }>(`/markets/${market}/stocks${query}`);
       if (data && typeof data === 'object' && 'items' in data && Array.isArray(data.items)) {
         return data.items;
       }
