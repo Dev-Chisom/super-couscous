@@ -66,13 +66,42 @@ export interface StockClassification {
   investor_recommendation: InvestorRecommendation;
 }
 
+export interface DividendFactor {
+  score?: number;
+  dividend_yield?: number;
+  dividend_per_share?: number;
+  dividend_payout_ratio?: number;
+  is_dividend_stock?: boolean;
+}
+
+export interface EntryTimingFactor {
+  score?: number;
+  timing: "GOOD" | "FAIR" | "WAIT";
+}
+
+export interface LongTermTrendFactor {
+  score?: number;
+  factors?: string[];
+}
+
+export interface InvestmentGuidance {
+  when_to_buy: "GOOD" | "FAIR" | "WAIT" | string;
+  how_long_to_hold: "SHORT" | "MEDIUM" | "LONG" | string;
+  when_to_sell: string;
+}
+
 export interface SignalExplanation {
   summary: string;
+  investment_focus?: boolean;
   factors: {
     technical?: Record<string, any>;
     fundamental?: Record<string, any>;
     trend?: Record<string, any>;
+    dividend?: DividendFactor;
+    entry_timing?: EntryTimingFactor;
+    long_term_trend?: LongTermTrendFactor;
   };
+  investment_guidance?: InvestmentGuidance;
   triggers: string[];
   risks: string[];
   invalidation_conditions: string[];

@@ -5,9 +5,11 @@ import { api } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignalBadge } from "@/components/signal-badge";
 import { StockTypeBadge } from "@/components/stock-type-badge";
+import { EntryTimingBadge } from "@/components/entry-timing-badge";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { EmptyState } from "@/components/empty-state";
-import { Zap, ArrowRight, TrendingUp } from "lucide-react";
+import { Zap, ArrowRight, TrendingUp, DollarSign, Target } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { format } from "date-fns";
 
@@ -53,8 +55,17 @@ export function TopSignals() {
                         {signal.stock_id}
                       </h3>
                       <SignalBadge signal={signal.signal_type} confidence={signal.confidence_score} />
+                      {signal.explanation.investment_focus && (
+                        <Badge variant="secondary" className="bg-purple-500/10 text-purple-600 border-purple-500/20 text-xs">
+                          <Target className="h-3 w-3 mr-1" />
+                          Investment
+                        </Badge>
+                      )}
                       {signal.explanation.stock_classification && (
                         <StockTypeBadge stockType={signal.explanation.stock_classification.stock_type} showIcon={false} className="text-xs" />
+                      )}
+                      {signal.explanation.factors?.entry_timing && (
+                        <EntryTimingBadge timing={signal.explanation.factors.entry_timing.timing} showIcon={false} className="text-xs" />
                       )}
                       <time 
                         className="text-xs text-muted-foreground"
@@ -64,9 +75,29 @@ export function TopSignals() {
                         {format(new Date(signal.created_at), "MMM d, HH:mm")}
                       </time>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2 group-hover:text-foreground transition-colors">
+                    <p className="text-sm text-muted-foreground line-clamp-2 group-hover:text-foreground transition-colors mb-2">
                       {signal.explanation.summary}
                     </p>
+                    <div className="flex items-center gap-3 flex-wrap text-xs">
+                      {signal.explanation.factors?.dividend?.is_dividend_stock && 
+                       signal.explanation.factors.dividend.dividend_yield !== undefined && (
+                        <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
+                          <DollarSign className="h-3 w-3" />
+                          <span>
+                            {typeof signal.explanation.factors.dividend.dividend_yield === 'number'
+                              ? `${signal.explanation.factors.dividend.dividend_yield.toFixed(2)}% yield`
+                              : `${signal.explanation.factors.dividend.dividend_yield}% yield`}
+                          </span>
+                        </div>
+                      )}
+                      {signal.holding_period && (
+                        <span className="text-muted-foreground">
+                          Hold: {signal.holding_period}
+                          {signal.holding_period === "LONG" && " (5+ years)"}
+                          {signal.holding_period === "MEDIUM" && " (1-5 years)"}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <ArrowRight 
                     className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" 

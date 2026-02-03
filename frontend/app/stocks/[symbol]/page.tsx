@@ -7,10 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SignalBadge } from "@/components/signal-badge";
 import { StockChart } from "@/components/stock-chart";
 import { StockTypeBadge } from "@/components/stock-type-badge";
+import { EntryTimingBadge } from "@/components/entry-timing-badge";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useWatchlistStore } from "@/lib/store";
-import { Star, ArrowLeft, TrendingUp, AlertTriangle, Info, BarChart3, DollarSign } from "lucide-react";
+import { Star, ArrowLeft, TrendingUp, AlertTriangle, Info, BarChart3, DollarSign, Target, Clock } from "lucide-react";
 import Link from "next/link";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { EmptyState } from "@/components/empty-state";
@@ -165,7 +166,15 @@ export default function StockDetailPage() {
                   <TrendingUp className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <CardTitle>AI Investment Signal</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle>AI Investment Signal</CardTitle>
+                    {signal.explanation.investment_focus && (
+                      <Badge variant="secondary" className="bg-purple-500/10 text-purple-600 border-purple-500/20">
+                        <Target className="h-3 w-3 mr-1" />
+                        Investment Focus
+                      </Badge>
+                    )}
+                  </div>
                   <CardDescription>Current recommendation based on AI analysis</CardDescription>
                 </div>
               </div>
@@ -186,11 +195,66 @@ export default function StockDetailPage() {
               </div>
               <div className="p-4 bg-muted/50 rounded-lg">
                 <div className="text-sm text-muted-foreground mb-2">Holding Period</div>
-                <Badge variant="outline" className="text-base px-3 py-1.5">
-                  {signal.holding_period}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-base px-3 py-1.5">
+                    {signal.holding_period}
+                  </Badge>
+                  {signal.holding_period === "LONG" && (
+                    <span className="text-xs text-muted-foreground">(5+ years)</span>
+                  )}
+                  {signal.holding_period === "MEDIUM" && (
+                    <span className="text-xs text-muted-foreground">(1-5 years)</span>
+                  )}
+                  {signal.holding_period === "SHORT" && (
+                    <span className="text-xs text-muted-foreground">(days-weeks)</span>
+                  )}
+                </div>
               </div>
             </div>
+
+            {(signal.explanation.factors?.dividend?.is_dividend_stock || signal.explanation.factors?.entry_timing) && (
+              <div className="grid gap-4 md:grid-cols-2 mb-6">
+                {signal.explanation.factors?.dividend?.is_dividend_stock && signal.explanation.factors.dividend.dividend_yield !== undefined && (
+                  <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <DollarSign className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      <div className="text-sm text-muted-foreground">Dividend Yield</div>
+                    </div>
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {typeof signal.explanation.factors.dividend.dividend_yield === 'number' 
+                        ? `${signal.explanation.factors.dividend.dividend_yield.toFixed(2)}%`
+                        : signal.explanation.factors.dividend.dividend_yield}
+                      {signal.explanation.factors.dividend.dividend_yield! > 5 && (
+                        <Badge variant="secondary" className="ml-2 bg-green-500/20 text-green-700 dark:text-green-400">
+                          Excellent
+                        </Badge>
+                      )}
+                    </div>
+                    {signal.explanation.factors.dividend.dividend_per_share !== undefined && (
+                      <div className="text-sm text-muted-foreground mt-1">
+                        ${typeof signal.explanation.factors.dividend.dividend_per_share === 'number'
+                          ? signal.explanation.factors.dividend.dividend_per_share.toFixed(2)
+                          : signal.explanation.factors.dividend.dividend_per_share} per share
+                      </div>
+                    )}
+                  </div>
+                )}
+                {signal.explanation.factors?.entry_timing && (
+                  <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="h-4 w-4 text-primary" />
+                      <div className="text-sm text-muted-foreground">Entry Timing</div>
+                    </div>
+                    <EntryTimingBadge timing={signal.explanation.factors.entry_timing.timing} className="text-base px-3 py-1.5" />
+                    <div className="text-xs text-muted-foreground mt-2">
+                      {signal.explanation.factors.entry_timing.timing === "GOOD" && "Good entry point - consider buying"}
+                      {signal.explanation.factors.entry_timing.timing === "FAIR" && "Fair entry point - acceptable"}
+                      {signal.explanation.factors.entry_timing.timing === "WAIT" && "Wait for better entry point"}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="space-y-6">
               <div className="p-4 bg-primary/5 rounded-lg border border-primary/10">
@@ -251,6 +315,54 @@ export default function StockDetailPage() {
                       </li>
                     ))}
                   </ul>
+                </div>
+              )}
+
+              {signal.explanation.investment_guidance && (
+                <div className="p-4 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-lg border border-purple-500/20 mb-4">
+                  <h3 className="font-semibold mb-4 flex items-center gap-2 text-lg">
+                    <Target className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                    Investment Guidance
+                  </h3>
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <div className="p-3 bg-background/50 rounded-lg">
+                      <div className="text-sm font-medium mb-2">When to Buy</div>
+                      <EntryTimingBadge 
+                        timing={typeof signal.explanation.investment_guidance.when_to_buy === 'string' && 
+                                (signal.explanation.investment_guidance.when_to_buy === "GOOD" || 
+                                 signal.explanation.investment_guidance.when_to_buy === "FAIR" || 
+                                 signal.explanation.investment_guidance.when_to_buy === "WAIT")
+                          ? signal.explanation.investment_guidance.when_to_buy as "GOOD" | "FAIR" | "WAIT"
+                          : "GOOD"
+                        } 
+                        className="mb-2"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        {signal.explanation.investment_guidance.when_to_buy === "GOOD" && "Good entry point - consider buying"}
+                        {signal.explanation.investment_guidance.when_to_buy === "FAIR" && "Fair entry point - acceptable"}
+                        {signal.explanation.investment_guidance.when_to_buy === "WAIT" && "Wait for better entry point"}
+                        {!["GOOD", "FAIR", "WAIT"].includes(signal.explanation.investment_guidance.when_to_buy) && 
+                         signal.explanation.investment_guidance.when_to_buy}
+                      </p>
+                    </div>
+                    <div className="p-3 bg-background/50 rounded-lg">
+                      <div className="text-sm font-medium mb-2">How Long to Hold</div>
+                      <Badge variant="outline" className="mb-2">
+                        {signal.explanation.investment_guidance.how_long_to_hold}
+                      </Badge>
+                      <p className="text-xs text-muted-foreground">
+                        {signal.explanation.investment_guidance.how_long_to_hold === "LONG" && "Hold for 5+ years for best results"}
+                        {signal.explanation.investment_guidance.how_long_to_hold === "MEDIUM" && "Hold for 1-5 years"}
+                        {signal.explanation.investment_guidance.how_long_to_hold === "SHORT" && "Short-term position only"}
+                        {!["LONG", "MEDIUM", "SHORT"].includes(signal.explanation.investment_guidance.how_long_to_hold) && 
+                         signal.explanation.investment_guidance.how_long_to_hold}
+                      </p>
+                    </div>
+                    <div className="p-3 bg-background/50 rounded-lg">
+                      <div className="text-sm font-medium mb-2">When to Sell</div>
+                      <p className="text-sm text-foreground">{signal.explanation.investment_guidance.when_to_sell}</p>
+                    </div>
+                  </div>
                 </div>
               )}
 
