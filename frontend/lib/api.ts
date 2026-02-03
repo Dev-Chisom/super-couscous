@@ -10,15 +10,27 @@ import type {
   Market,
 } from "@/types";
 
-let API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
-if (API_BASE_URL && !API_BASE_URL.startsWith('http://') && !API_BASE_URL.startsWith('https://')) {
-  API_BASE_URL = `https://${API_BASE_URL}`;
+function getApiBaseUrl(): string {
+  let baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  
+  if (!baseUrl) {
+    baseUrl = "http://localhost:8000";
+  }
+  
+  baseUrl = baseUrl.trim();
+  
+  if (baseUrl.endsWith('/api/v1')) {
+    baseUrl = baseUrl.replace('/api/v1', '').replace(/\/$/, '');
+  }
+  
+  if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
+    baseUrl = `https://${baseUrl}`;
+  }
+  
+  return baseUrl;
 }
 
-if (API_BASE_URL.endsWith('/api/v1')) {
-  API_BASE_URL = API_BASE_URL.replace('/api/v1', '');
-}
+const API_BASE_URL = getApiBaseUrl();
 
 export class ApiClientError extends Error {
   constructor(
