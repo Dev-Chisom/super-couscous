@@ -48,7 +48,14 @@ async function fetchApi<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
-  const url = `${API_BASE_URL}/api/v1${endpoint}`;
+  const baseUrl = API_BASE_URL;
+  const endpointPath = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${baseUrl}/api/v1${endpointPath}`;
+  
+  if (typeof window !== 'undefined' && !url.startsWith('http://') && !url.startsWith('https://')) {
+    console.error('Invalid API URL:', url, 'API_BASE_URL:', baseUrl, 'env:', process.env.NEXT_PUBLIC_API_URL);
+    throw new ApiClientError(`Invalid API URL configuration: ${url}`, 0, "CONFIG_ERROR");
+  }
   
   try {
     const response = await fetch(url, {
