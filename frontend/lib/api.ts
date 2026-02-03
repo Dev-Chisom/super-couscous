@@ -28,7 +28,11 @@ async function fetchApi<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
-  const url = `${API_BASE_URL}/api/v1${endpoint}`;
+  let baseUrl = API_BASE_URL;
+  if (baseUrl.endsWith('/api/v1')) {
+    baseUrl = baseUrl.replace('/api/v1', '');
+  }
+  const url = `${baseUrl}/api/v1${endpoint}`;
   
   try {
     const response = await fetch(url, {
