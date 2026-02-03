@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { useWatchlistStore } from "@/lib/store";
 import { Star, ArrowLeft, TrendingUp, AlertTriangle, Info, BarChart3, DollarSign } from "lucide-react";
 import Link from "next/link";
-import { format } from "date-fns";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { EmptyState } from "@/components/empty-state";
 
@@ -111,14 +110,14 @@ export default function StockDetailPage() {
                   <span className="text-3xl font-bold">
                     {stock.currency} {latestPrice.close.toFixed(2)}
                   </span>
-                  {prices && prices.length > 1 && (
+                  {prices && prices.length > 1 && prices[prices.length - 2] && (
                     <span className={`text-sm font-medium ${
-                      latestPrice.close >= prices[prices.length - 2].close 
+                      latestPrice.close >= prices[prices.length - 2]!.close 
                         ? 'text-green-600' 
                         : 'text-red-600'
                     }`}>
-                      {latestPrice.close >= prices[prices.length - 2].close ? '+' : ''}
-                      {((latestPrice.close - prices[prices.length - 2].close) / prices[prices.length - 2].close * 100).toFixed(2)}%
+                      {latestPrice.close >= prices[prices.length - 2]!.close ? '+' : ''}
+                      {((latestPrice.close - prices[prices.length - 2]!.close) / prices[prices.length - 2]!.close * 100).toFixed(2)}%
                     </span>
                   )}
                 </div>

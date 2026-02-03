@@ -4,16 +4,13 @@ import { Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SignalBadge } from "@/components/signal-badge";
 import { useWatchlistStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { LoadingSpinner } from "@/components/loading-spinner";
 import { EmptyState } from "@/components/empty-state";
 import { SuspenseFallback } from "@/components/suspense-fallback";
-import { Star, TrendingUp, Globe, Sparkles, ArrowRight } from "lucide-react";
+import { Star, Globe, Sparkles, ArrowRight } from "lucide-react";
 import { TopSignals } from "@/components/top-signals";
 import Link from "next/link";
-import { format } from "date-fns";
 
 export default function Dashboard() {
   const { watchlist, removeFromWatchlist } = useWatchlistStore();

@@ -51,7 +51,7 @@ async function fetchApi<T>(
 
     const data: ApiResponse<T> | ApiError = await response.json();
 
-    if (!data.success) {
+    if (!data.success && 'error' in data) {
       throw new ApiClientError(
         data.error.message,
         response.status,
@@ -147,5 +147,3 @@ export const api = {
     },
   },
 };
-
-export { ApiClientError };
