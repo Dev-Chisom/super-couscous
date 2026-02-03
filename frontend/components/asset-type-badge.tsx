@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Package, Building2 } from "lucide-react";
+import { Package, Building2 } from "lucide-react";
 import type { AssetType } from "@/types";
 
 interface AssetTypeBadgeProps {
@@ -23,11 +23,6 @@ export function AssetTypeBadge({ assetType, className, showIcon = true }: AssetT
       label: "Mutual Fund",
       icon: Building2,
       className: "bg-purple-500/10 text-purple-600 border-purple-500/20 hover:bg-purple-500/20 dark:text-purple-400",
-    },
-    STOCK: {
-      label: "Stock",
-      icon: TrendingUp,
-      className: "bg-blue-500/10 text-blue-600 border-blue-500/20 hover:bg-blue-500/20 dark:text-blue-400",
     },
   };
 
