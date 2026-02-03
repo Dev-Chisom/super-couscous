@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignalBadge } from "@/components/signal-badge";
 import { StockChart } from "@/components/stock-chart";
+import { StockTypeBadge } from "@/components/stock-type-badge";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useWatchlistStore } from "@/lib/store";
@@ -104,6 +105,9 @@ export default function StockDetailPage() {
               <Badge variant="outline" className="text-sm px-3 py-1">{stock.market}</Badge>
               {stock.sector && (
                 <Badge variant="secondary" className="text-sm px-3 py-1">{stock.sector}</Badge>
+              )}
+              {stock.stock_type && (
+                <StockTypeBadge stockType={stock.stock_type} />
               )}
               {latestPrice && (
                 <div className="flex items-baseline gap-2">
@@ -249,6 +253,58 @@ export default function StockDetailPage() {
                   </ul>
                 </div>
               )}
+
+              {signal.explanation.stock_classification && (
+                <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+                  <h3 className="font-semibold mb-4 flex items-center gap-2 text-lg">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    Investment Recommendation
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-sm text-muted-foreground mb-2">Stock Type</div>
+                      <StockTypeBadge stockType={signal.explanation.stock_classification.stock_type} />
+                    </div>
+                    {signal.explanation.stock_classification.investor_recommendation.best_for.length > 0 && (
+                      <div>
+                        <div className="text-sm font-medium mb-2">Best For:</div>
+                        <ul className="space-y-1">
+                          {signal.explanation.stock_classification.investor_recommendation.best_for.map((item, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm">
+                              <span className="text-primary mt-1">•</span>
+                              <span className="text-foreground">{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {signal.explanation.stock_classification.investor_recommendation.strategy && (
+                      <div>
+                        <div className="text-sm font-medium mb-1">Strategy:</div>
+                        <p className="text-sm text-foreground">
+                          {signal.explanation.stock_classification.investor_recommendation.strategy}
+                        </p>
+                      </div>
+                    )}
+                    {signal.explanation.stock_classification.investor_recommendation.time_horizon && (
+                      <div>
+                        <div className="text-sm font-medium mb-1">Time Horizon:</div>
+                        <p className="text-sm text-foreground">
+                          {signal.explanation.stock_classification.investor_recommendation.time_horizon}
+                        </p>
+                      </div>
+                    )}
+                    {signal.explanation.stock_classification.investor_recommendation.action && (
+                      <div className="pt-2 border-t">
+                        <div className="text-sm font-medium mb-1">Recommended Action:</div>
+                        <p className="text-sm font-semibold text-primary">
+                          {signal.explanation.stock_classification.investor_recommendation.action}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -370,6 +426,40 @@ export default function StockDetailPage() {
                   </div>
                 )}
               </div>
+              {(fundamentals.dividend_yield !== undefined || fundamentals.dividend_per_share !== undefined || fundamentals.dividend_payout_ratio !== undefined) && (
+                <div className="mt-6 pt-6 border-t">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-primary" />
+                    Dividend Information
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {fundamentals.dividend_yield !== undefined && (
+                      <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                        <div className="text-sm text-muted-foreground mb-1">Dividend Yield</div>
+                        <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+                          {fundamentals.dividend_yield.toFixed(2)}%
+                        </div>
+                      </div>
+                    )}
+                    {fundamentals.dividend_per_share !== undefined && (
+                      <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                        <div className="text-sm text-muted-foreground mb-1">Dividend per Share</div>
+                        <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+                          {stock.currency} {fundamentals.dividend_per_share.toFixed(2)}
+                        </div>
+                      </div>
+                    )}
+                    {fundamentals.dividend_payout_ratio !== undefined && (
+                      <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                        <div className="text-sm text-muted-foreground mb-1">Payout Ratio</div>
+                        <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+                          {fundamentals.dividend_payout_ratio.toFixed(2)}%
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

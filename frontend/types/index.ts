@@ -6,12 +6,15 @@ export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
 
 export type HoldingPeriod = "SHORT" | "MEDIUM" | "LONG";
 
+export type StockType = "GROWTH" | "DIVIDEND" | "HYBRID";
+
 export interface Stock {
   id: string;
   symbol: string;
   name: string;
   market: Market;
   sector?: string;
+  stock_type?: StockType | null;
   currency: string;
   is_active: boolean;
   created_at: string;
@@ -45,7 +48,22 @@ export interface Fundamental {
   pe_ratio?: number;
   debt_ratio?: number;
   earnings_growth?: number;
+  dividend_yield?: number;
+  dividend_per_share?: number;
+  dividend_payout_ratio?: number;
   date: string;
+}
+
+export interface InvestorRecommendation {
+  best_for: string[];
+  strategy: string;
+  time_horizon: string;
+  action: string;
+}
+
+export interface StockClassification {
+  stock_type: StockType;
+  investor_recommendation: InvestorRecommendation;
 }
 
 export interface SignalExplanation {
@@ -58,6 +76,7 @@ export interface SignalExplanation {
   triggers: string[];
   risks: string[];
   invalidation_conditions: string[];
+  stock_classification?: StockClassification;
 }
 
 export interface Signal {

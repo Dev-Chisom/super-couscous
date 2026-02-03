@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignalBadge } from "@/components/signal-badge";
+import { StockTypeBadge } from "@/components/stock-type-badge";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { EmptyState } from "@/components/empty-state";
 import { Zap, ArrowRight, TrendingUp } from "lucide-react";
@@ -52,6 +53,9 @@ export function TopSignals() {
                         {signal.stock_id}
                       </h3>
                       <SignalBadge signal={signal.signal_type} confidence={signal.confidence_score} />
+                      {signal.explanation.stock_classification && (
+                        <StockTypeBadge stockType={signal.explanation.stock_classification.stock_type} showIcon={false} className="text-xs" />
+                      )}
                       <time 
                         className="text-xs text-muted-foreground"
                         dateTime={signal.created_at}

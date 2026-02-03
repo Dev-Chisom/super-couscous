@@ -113,7 +113,7 @@ function buildQueryString(params?: Record<string, any>): string {
 
 export const api = {
   stocks: {
-    list: async (params?: { market?: Market; sector?: string; page?: number; limit?: number }) => {
+    list: async (params?: { market?: Market; sector?: string; stock_type?: string; page?: number; limit?: number }) => {
       const query = buildQueryString(params);
       return fetchApi<Stock[]>(`/stocks${query}`);
     },

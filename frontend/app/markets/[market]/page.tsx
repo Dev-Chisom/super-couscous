@@ -5,17 +5,20 @@ import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignalBadge } from "@/components/signal-badge";
+import { StockTypeBadge } from "@/components/stock-type-badge";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { EmptyState } from "@/components/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { Globe, ArrowRight, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import type { Market } from "@/types";
+import { useState } from "react";
+import type { Market, StockType } from "@/types";
 
 export default function MarketPage() {
   const params = useParams();
   const market = (params.market as string).toUpperCase() as Market;
+  const [stockTypeFilter, setStockTypeFilter] = useState<StockType | "ALL">("ALL");
 
   const { data: stocks, isLoading } = useQuery({
     queryKey: ["market-stocks", market],
@@ -32,6 +35,10 @@ export default function MarketPage() {
   const signalsMap = new Map(
     (Array.isArray(signals) ? signals : []).map((signal) => [signal.stock_id, signal])
   );
+
+  const filteredStocks = Array.isArray(stocks) 
+    ? stocks.filter(stock => stockTypeFilter === "ALL" || stock.stock_type === stockTypeFilter)
+    : [];
 
   if (isLoading) {
     return (
@@ -62,9 +69,41 @@ export default function MarketPage() {
         </div>
       </div>
 
-      {Array.isArray(stocks) && stocks.length > 0 ? (
+      <div className="mb-6 flex items-center gap-2 flex-wrap">
+        <span className="text-sm text-muted-foreground">Filter by type:</span>
+        <Button
+          variant={stockTypeFilter === "ALL" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setStockTypeFilter("ALL")}
+        >
+          All Stocks
+        </Button>
+        <Button
+          variant={stockTypeFilter === "GROWTH" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setStockTypeFilter("GROWTH")}
+        >
+          Growth
+        </Button>
+        <Button
+          variant={stockTypeFilter === "DIVIDEND" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setStockTypeFilter("DIVIDEND")}
+        >
+          Dividend
+        </Button>
+        <Button
+          variant={stockTypeFilter === "HYBRID" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setStockTypeFilter("HYBRID")}
+        >
+          Hybrid
+        </Button>
+      </div>
+
+      {filteredStocks.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {stocks.map((stock) => {
+          {filteredStocks.map((stock) => {
             const signal = signalsMap.get(stock.symbol);
             return (
               <Card key={stock.id} className="group hover:shadow-lg transition-all hover:border-primary/50">
@@ -77,6 +116,11 @@ export default function MarketPage() {
                       <p className="text-sm text-muted-foreground line-clamp-2">
                         {stock.name}
                       </p>
+                      {stock.stock_type && (
+                        <div className="mt-2">
+                          <StockTypeBadge stockType={stock.stock_type} showIcon={false} className="text-xs" />
+                        </div>
+                      )}
                     </div>
                     {signal && (
                       <SignalBadge
