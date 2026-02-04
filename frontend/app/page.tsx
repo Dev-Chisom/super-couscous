@@ -21,24 +21,24 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <Sparkles className="h-6 w-6 text-primary" />
+    <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8 max-w-7xl">
+      <div className="mb-6 sm:mb-10">
+        <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+          <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10">
+            <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               Dashboard
           </h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="text-sm sm:text-base text-muted-foreground mt-0.5 sm:mt-1">
               AI-powered investment signals for US and Nigerian markets
             </p>
           </div>
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Top Signals Today */}
         <Suspense fallback={<SuspenseFallback message="Loading signals..." />}>
           <TopSignals />

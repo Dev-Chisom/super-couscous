@@ -58,30 +58,31 @@ export default function MarketPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <Globe className="h-6 w-6 text-primary" />
+    <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8 max-w-7xl">
+      <div className="mb-6 sm:mb-10">
+        <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+          <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10">
+            <Globe className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               {market} Market
             </h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="text-sm sm:text-base text-muted-foreground mt-0.5 sm:mt-1">
               Browse all stocks and AI signals for the {market} market
             </p>
           </div>
         </div>
       </div>
 
-      <div className="mb-6 space-y-4">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-muted-foreground">Asset Type:</span>
+      <div className="mb-4 sm:mb-6 space-y-3 sm:space-y-4">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+          <span className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">Asset Type:</span>
           <Button
             variant={assetTypeFilter === "ALL" ? "default" : "outline"}
             size="sm"
             onClick={() => setAssetTypeFilter("ALL")}
+            className="text-xs sm:text-sm px-2 sm:px-3"
           >
             All Assets
           </Button>
@@ -89,6 +90,7 @@ export default function MarketPage() {
             variant={assetTypeFilter === "STOCK" ? "default" : "outline"}
             size="sm"
             onClick={() => setAssetTypeFilter("STOCK")}
+            className="text-xs sm:text-sm px-2 sm:px-3"
           >
             Stocks
           </Button>
@@ -96,6 +98,7 @@ export default function MarketPage() {
             variant={assetTypeFilter === "ETF" ? "default" : "outline"}
             size="sm"
             onClick={() => setAssetTypeFilter("ETF")}
+            className="text-xs sm:text-sm px-2 sm:px-3"
           >
             ETFs
           </Button>
@@ -103,16 +106,18 @@ export default function MarketPage() {
             variant={assetTypeFilter === "MUTUAL_FUND" ? "default" : "outline"}
             size="sm"
             onClick={() => setAssetTypeFilter("MUTUAL_FUND")}
+            className="text-xs sm:text-sm px-2 sm:px-3"
           >
             Mutual Funds
           </Button>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-muted-foreground">Stock Type:</span>
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+          <span className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">Stock Type:</span>
           <Button
             variant={stockTypeFilter === "ALL" ? "default" : "outline"}
             size="sm"
             onClick={() => setStockTypeFilter("ALL")}
+            className="text-xs sm:text-sm px-2 sm:px-3"
           >
             All
           </Button>
@@ -120,6 +125,7 @@ export default function MarketPage() {
             variant={stockTypeFilter === "GROWTH" ? "default" : "outline"}
             size="sm"
             onClick={() => setStockTypeFilter("GROWTH")}
+            className="text-xs sm:text-sm px-2 sm:px-3"
           >
             Growth
           </Button>
@@ -127,6 +133,7 @@ export default function MarketPage() {
             variant={stockTypeFilter === "DIVIDEND" ? "default" : "outline"}
             size="sm"
             onClick={() => setStockTypeFilter("DIVIDEND")}
+            className="text-xs sm:text-sm px-2 sm:px-3"
           >
             Dividend
           </Button>
@@ -134,6 +141,7 @@ export default function MarketPage() {
             variant={stockTypeFilter === "HYBRID" ? "default" : "outline"}
             size="sm"
             onClick={() => setStockTypeFilter("HYBRID")}
+            className="text-xs sm:text-sm px-2 sm:px-3"
           >
             Hybrid
           </Button>
@@ -141,7 +149,7 @@ export default function MarketPage() {
       </div>
 
       {filteredStocks.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredStocks.map((stock) => {
             const signal = signalsMap.get(stock.symbol);
             return (

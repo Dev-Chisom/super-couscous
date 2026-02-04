@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const links = [
     { href: "/", label: "Dashboard" },
@@ -25,15 +28,15 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           <Link 
             href="/" 
-            className="flex items-center gap-2 text-xl font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+            className="flex items-center gap-2 text-lg sm:text-xl font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
             aria-label="SignalIQ Home"
           >
-            <TrendingUp className="h-6 w-6 text-primary" aria-hidden="true" />
+            <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-primary" aria-hidden="true" />
             <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               SignalIQ
             </span>
           </Link>
-          <div className="flex items-center gap-6" role="list">
+          <div className="hidden md:flex items-center gap-4 lg:gap-6" role="list">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -55,7 +58,42 @@ export function Navbar() {
             ))}
             <ThemeToggle />
           </div>
+          <div className="flex md:hidden items-center gap-2">
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+              className="h-9 w-9"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
         </div>
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t py-4 space-y-2">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  "block px-4 py-3 text-base font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  pathname === link.href
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </nav>
   );

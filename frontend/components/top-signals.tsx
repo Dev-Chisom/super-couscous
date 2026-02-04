@@ -39,19 +39,19 @@ export function TopSignals() {
             <p className="text-muted-foreground mt-4">Loading signals...</p>
           </div>
         ) : Array.isArray(topSignals) && topSignals.length > 0 ? (
-          <div className="space-y-3" role="list" aria-label="Top investment signals">
+          <div className="space-y-2 sm:space-y-3" role="list" aria-label="Top investment signals">
             {topSignals.map((signal) => (
               <Link
                 key={signal.id}
                 href={`/stocks/${signal.stock_id}`}
-                className="group block p-4 border rounded-lg hover:border-primary/50 hover:bg-accent/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
+                className="group block p-3 sm:p-4 border rounded-lg hover:border-primary/50 hover:bg-accent/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
                 role="listitem"
                 aria-label={`${signal.stock_id} - ${signal.signal_type} signal with ${signal.confidence_score}% confidence`}
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between gap-2 sm:gap-4">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-2 flex-wrap">
-                      <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2 flex-wrap">
+                      <h3 className="font-semibold text-base sm:text-lg group-hover:text-primary transition-colors">
                         {signal.stock_id}
                       </h3>
                       <SignalBadge signal={signal.signal_type} confidence={signal.confidence_score} />

@@ -88,22 +88,22 @@ export default function StockDetailPage() {
   const latestIndicators = indicators && indicators.length > 0 ? indicators[indicators.length - 1] : null;
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <div className="mb-8">
+    <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8 max-w-7xl">
+      <div className="mb-6 sm:mb-8">
         <Link href="/">
-          <Button variant="ghost" className="mb-6 group">
+          <Button variant="ghost" className="mb-4 sm:mb-6 group text-sm sm:text-base">
             <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Dashboard
           </Button>
         </Link>
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-3">
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent break-words">
                 {stock.name}
               </h1>
             </div>
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
               <Badge variant="outline" className="text-sm px-3 py-1">{stock.market}</Badge>
               {stock.asset_type && stock.asset_type !== "STOCK" && (
                 <AssetTypeBadge assetType={stock.asset_type} />
@@ -115,12 +115,12 @@ export default function StockDetailPage() {
                 <StockTypeBadge stockType={stock.stock_type} />
               )}
               {latestPrice && (
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold">
+                <div className="flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
+                  <span className="text-xl sm:text-2xl md:text-3xl font-bold">
                     {stock.currency} {latestPrice.close.toFixed(2)}
                   </span>
                   {prices && prices.length > 1 && prices[prices.length - 2] && (
-                    <span className={`text-sm font-medium ${
+                    <span className={`text-xs sm:text-sm font-medium ${
                       latestPrice.close >= prices[prices.length - 2]!.close 
                         ? 'text-green-600' 
                         : 'text-red-600'
@@ -142,7 +142,8 @@ export default function StockDetailPage() {
                 addToWatchlist(symbol);
               }
             }}
-            className="w-full md:w-auto"
+            className="w-full sm:w-auto text-sm sm:text-base"
+            size="sm"
           >
             <Star
               className={`h-4 w-4 mr-2 ${inWatchlist ? "fill-yellow-500 text-yellow-500" : ""}`}
@@ -186,21 +187,21 @@ export default function StockDetailPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-3 mb-6">
-              <div className="p-4 bg-muted/50 rounded-lg">
-                <div className="text-sm text-muted-foreground mb-2">Confidence</div>
-                <div className="text-3xl font-bold">{signal.confidence_score}%</div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <div className="p-3 sm:p-4 bg-muted/50 rounded-lg">
+                <div className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2">Confidence</div>
+                <div className="text-2xl sm:text-3xl font-bold">{signal.confidence_score}%</div>
               </div>
-              <div className="p-4 bg-muted/50 rounded-lg">
-                <div className="text-sm text-muted-foreground mb-2">Risk Level</div>
-                <Badge variant="outline" className="text-base px-3 py-1.5">
+              <div className="p-3 sm:p-4 bg-muted/50 rounded-lg">
+                <div className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2">Risk Level</div>
+                <Badge variant="outline" className="text-sm sm:text-base px-2 sm:px-3 py-1 sm:py-1.5">
                   {signal.risk_level}
                 </Badge>
               </div>
-              <div className="p-4 bg-muted/50 rounded-lg">
-                <div className="text-sm text-muted-foreground mb-2">Holding Period</div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-base px-3 py-1.5">
+              <div className="p-3 sm:p-4 bg-muted/50 rounded-lg">
+                <div className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2">Holding Period</div>
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                  <Badge variant="outline" className="text-sm sm:text-base px-2 sm:px-3 py-1 sm:py-1.5">
                     {signal.holding_period}
                   </Badge>
                   {signal.holding_period === "LONG" && (
@@ -217,7 +218,7 @@ export default function StockDetailPage() {
             </div>
 
             {(signal.explanation.factors?.dividend?.is_dividend_stock || signal.explanation.factors?.entry_timing) && (
-              <div className="grid gap-4 md:grid-cols-2 mb-6">
+              <div className="grid gap-3 sm:gap-4 md:grid-cols-2 mb-4 sm:mb-6">
                 {signal.explanation.factors?.dividend?.is_dividend_stock && signal.explanation.factors.dividend.dividend_yield !== undefined && (
                   <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
                     <div className="flex items-center gap-2 mb-2">
@@ -329,8 +330,8 @@ export default function StockDetailPage() {
                     Investment Guidance
                   </h3>
                   <div className="grid gap-4 md:grid-cols-3">
-                    <div className="p-3 bg-background/50 rounded-lg">
-                      <div className="text-sm font-medium mb-2">When to Buy</div>
+                    <div className="p-2 sm:p-3 bg-background/50 rounded-lg">
+                      <div className="text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">When to Buy</div>
                       <EntryTimingBadge 
                         timing={typeof signal.explanation.investment_guidance.when_to_buy === 'string' && 
                                 (signal.explanation.investment_guidance.when_to_buy === "GOOD" || 
@@ -349,8 +350,8 @@ export default function StockDetailPage() {
                          signal.explanation.investment_guidance.when_to_buy}
                       </p>
                     </div>
-                    <div className="p-3 bg-background/50 rounded-lg">
-                      <div className="text-sm font-medium mb-2">How Long to Hold</div>
+                    <div className="p-2 sm:p-3 bg-background/50 rounded-lg">
+                      <div className="text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">How Long to Hold</div>
                       <Badge variant="outline" className="mb-2">
                         {signal.explanation.investment_guidance.how_long_to_hold}
                       </Badge>
@@ -362,9 +363,9 @@ export default function StockDetailPage() {
                          signal.explanation.investment_guidance.how_long_to_hold}
                       </p>
                     </div>
-                    <div className="p-3 bg-background/50 rounded-lg">
-                      <div className="text-sm font-medium mb-2">When to Sell</div>
-                      <p className="text-sm text-foreground">{signal.explanation.investment_guidance.when_to_sell}</p>
+                    <div className="p-2 sm:p-3 bg-background/50 rounded-lg">
+                      <div className="text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">When to Sell</div>
+                      <p className="text-xs sm:text-sm text-foreground">{signal.explanation.investment_guidance.when_to_sell}</p>
                     </div>
                   </div>
                 </div>
@@ -426,7 +427,7 @@ export default function StockDetailPage() {
         </Card>
       ) : null}
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
         <Card>
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2">
@@ -442,13 +443,15 @@ export default function StockDetailPage() {
                 <p className="text-muted-foreground mt-4">Loading chart...</p>
               </div>
             ) : prices && prices.length > 0 ? (
-              <StockChart data={prices} height={400} />
+              <div className="h-[300px] sm:h-[400px]">
+                <StockChart data={prices} height={300} />
+              </div>
             ) : (
               <EmptyState
                 icon={BarChart3}
                 title="No price data available"
                 description="Price data will appear here once available"
-                className="h-[400px]"
+                className="h-[300px] sm:h-[400px]"
               />
             )}
           </CardContent>
@@ -464,29 +467,29 @@ export default function StockDetailPage() {
           </CardHeader>
           <CardContent>
             {latestIndicators ? (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-2 sm:gap-4">
                 {latestIndicators.rsi !== undefined && latestIndicators.rsi !== null && typeof latestIndicators.rsi === 'number' && (
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <div className="text-sm text-muted-foreground mb-1">RSI</div>
-                    <div className="text-2xl font-semibold">{latestIndicators.rsi.toFixed(2)}</div>
+                  <div className="p-2 sm:p-3 bg-muted/50 rounded-lg">
+                    <div className="text-xs sm:text-sm text-muted-foreground mb-1">RSI</div>
+                    <div className="text-xl sm:text-2xl font-semibold">{latestIndicators.rsi.toFixed(2)}</div>
                   </div>
                 )}
                 {latestIndicators.macd !== undefined && latestIndicators.macd !== null && typeof latestIndicators.macd === 'number' && (
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <div className="text-sm text-muted-foreground mb-1">MACD</div>
-                    <div className="text-2xl font-semibold">{latestIndicators.macd.toFixed(2)}</div>
+                  <div className="p-2 sm:p-3 bg-muted/50 rounded-lg">
+                    <div className="text-xs sm:text-sm text-muted-foreground mb-1">MACD</div>
+                    <div className="text-xl sm:text-2xl font-semibold">{latestIndicators.macd.toFixed(2)}</div>
                   </div>
                 )}
                 {latestIndicators.sma_20 !== undefined && latestIndicators.sma_20 !== null && typeof latestIndicators.sma_20 === 'number' && (
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <div className="text-sm text-muted-foreground mb-1">SMA 20</div>
-                    <div className="text-2xl font-semibold">{latestIndicators.sma_20.toFixed(2)}</div>
+                  <div className="p-2 sm:p-3 bg-muted/50 rounded-lg">
+                    <div className="text-xs sm:text-sm text-muted-foreground mb-1">SMA 20</div>
+                    <div className="text-xl sm:text-2xl font-semibold">{latestIndicators.sma_20.toFixed(2)}</div>
                   </div>
                 )}
                 {latestIndicators.sma_50 !== undefined && latestIndicators.sma_50 !== null && typeof latestIndicators.sma_50 === 'number' && (
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <div className="text-sm text-muted-foreground mb-1">SMA 50</div>
-                    <div className="text-2xl font-semibold">{latestIndicators.sma_50.toFixed(2)}</div>
+                  <div className="p-2 sm:p-3 bg-muted/50 rounded-lg">
+                    <div className="text-xs sm:text-sm text-muted-foreground mb-1">SMA 50</div>
+                    <div className="text-xl sm:text-2xl font-semibold">{latestIndicators.sma_50.toFixed(2)}</div>
                   </div>
                 )}
               </div>
@@ -510,23 +513,23 @@ export default function StockDetailPage() {
               <CardDescription>Key financial metrics</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-2 sm:gap-4">
                 {fundamentals.pe_ratio !== undefined && fundamentals.pe_ratio !== null && typeof fundamentals.pe_ratio === 'number' && (
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <div className="text-sm text-muted-foreground mb-1">P/E Ratio</div>
-                    <div className="text-2xl font-semibold">{fundamentals.pe_ratio.toFixed(2)}</div>
+                  <div className="p-2 sm:p-3 bg-muted/50 rounded-lg">
+                    <div className="text-xs sm:text-sm text-muted-foreground mb-1">P/E Ratio</div>
+                    <div className="text-xl sm:text-2xl font-semibold">{fundamentals.pe_ratio.toFixed(2)}</div>
                   </div>
                 )}
                 {fundamentals.eps !== undefined && fundamentals.eps !== null && typeof fundamentals.eps === 'number' && (
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <div className="text-sm text-muted-foreground mb-1">EPS</div>
-                    <div className="text-2xl font-semibold">{fundamentals.eps.toFixed(2)}</div>
+                  <div className="p-2 sm:p-3 bg-muted/50 rounded-lg">
+                    <div className="text-xs sm:text-sm text-muted-foreground mb-1">EPS</div>
+                    <div className="text-xl sm:text-2xl font-semibold">{fundamentals.eps.toFixed(2)}</div>
                   </div>
                 )}
                 {fundamentals.earnings_growth !== undefined && fundamentals.earnings_growth !== null && typeof fundamentals.earnings_growth === 'number' && (
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <div className="text-sm text-muted-foreground mb-1">Earnings Growth</div>
-                    <div className={`text-2xl font-semibold ${
+                  <div className="p-2 sm:p-3 bg-muted/50 rounded-lg">
+                    <div className="text-xs sm:text-sm text-muted-foreground mb-1">Earnings Growth</div>
+                    <div className={`text-xl sm:text-2xl font-semibold ${
                       fundamentals.earnings_growth >= 0 ? 'text-green-600' : 'text-red-600'
                     }`}>
                       {fundamentals.earnings_growth >= 0 ? '+' : ''}{fundamentals.earnings_growth.toFixed(2)}%
@@ -534,9 +537,9 @@ export default function StockDetailPage() {
                   </div>
                 )}
                 {fundamentals.revenue !== undefined && fundamentals.revenue !== null && typeof fundamentals.revenue === 'number' && (
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <div className="text-sm text-muted-foreground mb-1">Revenue</div>
-                    <div className="text-2xl font-semibold">
+                  <div className="p-2 sm:p-3 bg-muted/50 rounded-lg">
+                    <div className="text-xs sm:text-sm text-muted-foreground mb-1">Revenue</div>
+                    <div className="text-lg sm:text-xl md:text-2xl font-semibold">
                       {stock.currency} {(fundamentals.revenue / 1e9).toFixed(2)}B
                     </div>
                   </div>
@@ -545,32 +548,32 @@ export default function StockDetailPage() {
               {(fundamentals.dividend_yield !== undefined && fundamentals.dividend_yield !== null ||
                 fundamentals.dividend_per_share !== undefined && fundamentals.dividend_per_share !== null ||
                 fundamentals.dividend_payout_ratio !== undefined && fundamentals.dividend_payout_ratio !== null) && (
-                <div className="mt-6 pt-6 border-t">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <DollarSign className="h-5 w-5 text-primary" />
+                <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                  <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                     Dividend Information
                   </h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                     {fundamentals.dividend_yield !== undefined && fundamentals.dividend_yield !== null && (
-                      <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                        <div className="text-sm text-muted-foreground mb-1">Dividend Yield</div>
-                        <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+                      <div className="p-2 sm:p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                        <div className="text-xs sm:text-sm text-muted-foreground mb-1">Dividend Yield</div>
+                        <div className="text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-400">
                           {typeof fundamentals.dividend_yield === 'number' ? fundamentals.dividend_yield.toFixed(2) : fundamentals.dividend_yield}%
                         </div>
                       </div>
                     )}
                     {fundamentals.dividend_per_share !== undefined && fundamentals.dividend_per_share !== null && (
-                      <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                        <div className="text-sm text-muted-foreground mb-1">Dividend per Share</div>
-                        <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+                      <div className="p-2 sm:p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                        <div className="text-xs sm:text-sm text-muted-foreground mb-1">Dividend per Share</div>
+                        <div className="text-lg sm:text-xl md:text-2xl font-semibold text-blue-600 dark:text-blue-400">
                           {stock.currency} {typeof fundamentals.dividend_per_share === 'number' ? fundamentals.dividend_per_share.toFixed(2) : fundamentals.dividend_per_share}
                         </div>
                       </div>
                     )}
                     {fundamentals.dividend_payout_ratio !== undefined && fundamentals.dividend_payout_ratio !== null && (
-                      <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                        <div className="text-sm text-muted-foreground mb-1">Payout Ratio</div>
-                        <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+                      <div className="p-2 sm:p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                        <div className="text-xs sm:text-sm text-muted-foreground mb-1">Payout Ratio</div>
+                        <div className="text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-400">
                           {typeof fundamentals.dividend_payout_ratio === 'number' ? fundamentals.dividend_payout_ratio.toFixed(2) : fundamentals.dividend_payout_ratio}%
                         </div>
                       </div>
