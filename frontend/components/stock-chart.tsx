@@ -18,6 +18,7 @@ export function StockChart({ data, height = 400, className }: StockChartProps) {
   const { theme } = useTheme();
 
   const isDark = theme === "dark";
+  const chartHeight = height || 400;
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
@@ -32,7 +33,7 @@ export function StockChart({ data, height = 400, className }: StockChartProps) {
         horzLines: { color: isDark ? "#262626" : "#f0f0f0" },
       },
       width: chartContainerRef.current.clientWidth,
-      height: height,
+      height: chartHeight,
       timeScale: {
         timeVisible: true,
         secondsVisible: false,
@@ -78,7 +79,7 @@ export function StockChart({ data, height = 400, className }: StockChartProps) {
       window.removeEventListener("resize", handleResize);
       chartRef.current?.remove();
     };
-  }, [height, isDark]);
+  }, [chartHeight, isDark]);
 
   useEffect(() => {
     if (!seriesRef.current || !data.length) return;
